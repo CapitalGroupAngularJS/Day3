@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AngularJS</title>
+    <meta charset="utf-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
+    <script>
+      angular
+        .module('serviceApp', [])
+        .service("greetingService", greetingService)
+        .factory("greetingFactory", greetingFactory)
+        .provider("greetingProvider", greetingProvider)
+        .config(function(greetingProviderProvider) { greetingProviderProvider.setGreeting("Howdy"); })
+        .factory("greetingFactory2", greetingFactory2)
+        .controller("ServiceController", ServiceController);
+
+      function greetingService() {
+        var _greeting = "Hello";
+        this.setGreeting = function (greeting) { _greeting = greeting; };
+        this.sayHi = function() { return _greeting + " World"; };
+      }
+
+      function greetingFactory() {
+          var factory = {};
+          var _greeting = "Hello";
+          factory.setGreeting = function (greeting) { _greeting = greeting; };
+          factory.sayHi = function() { return _greeting + " World"; };
+          return factory;
+      }
+
+      function greetingProvider() {
+          var _greeting = "";
+          this.setGreeting = function(greeting) { _greeting = greeting; }
+
+          this.$get = function() {
+            var factory = {};
+            factory.sayHi = function() { return _greeting + " World"; };
+            return factory;
+          }
+      }
+
+      function greetingFactory2() {
+        return function () {
+          var _greeting = "Hello";
+          this.setGreeting = function (greeting) { _greeting = greeting; };
+          this.sayHi = function() { return _greeting + " World"; };
+        }
+      }
+
+      function ServiceController(greetingService, greetingFactory, greetingProvider, greetingFactory2) {
+        var vm = this;
+        greetingService.setGreeting("Hola");
+        vm.serviceMessage = greetingService.sayHi();
+
+        greetingFactory.setGreeting("Hola");
+        vm.factoryMessage = greetingFactory.sayHi();
+
+        vm.providerMessage = greetingProvider.sayHi();
+
+        // True Factory
+        var factory1 = new greetingFactory2();
+        var factory2 = new greetingFactory2();
+        factory1.setGreeting("Hiya");
+        factory2.setGreeting("Aloha");
+        vm.factory1Message = factory1.sayHi();
+        vm.factory2Message = factory2.sayHi();
+      }
+    </script>
+</head>
+<body >
+    <h1>Module 10.1 - Services</h1>
+    <div ng-app="serviceApp">
+      <div ng-controller="ServiceController as vm">
+        serviceMessage = {{vm.serviceMessage}}<br/>
+        factoryMessage = {{vm.factoryMessage}}<br/>
+        providerMessage = {{vm.providerMessage}}<br/>
+
+        factory1Message = {{vm.factory1Message}}<br/>
+        factory2Message = {{vm.factory2Message}}<br/>
+      </div>
+    </div>
+</body>
+</html>

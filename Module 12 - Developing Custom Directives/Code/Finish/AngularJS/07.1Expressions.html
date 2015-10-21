@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>AngularJS</title>
+	<meta charset="utf-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.js"></script>
+    <script>
+        angular.module("simpleApp", [])
+            .controller("ExpressionController", ExpressionController);
+
+        function ExpressionController($scope) {
+            $scope.message = "$scope.message";
+            this.message = "this.message";
+            $scope.int1 = 10;
+            $scope.int2 = 5;
+        }
+    </script>
+</head>
+<body>
+    <h1>Module 7 - Expressions</h1>
+    <div ng-app="simpleApp">
+        <div ng-controller="ExpressionController as expr">
+            message = {{message}}<br />
+            expr.message = {{expr.message}}<br />
+            logicalOr = {{expr.message2 || 'Nothing'}}<br />        <!-- One or the other must exist -->
+            logicalAnd = {{message && expr.message}}<br />          <!-- Both need to exist -->
+            comparison = {{int1 > int2 ? "true" : "false"}}<br />
+
+            <br />
+            addition = {{int1 + int2}}<br />
+            subtraction = {{int1 - int2}}<br />
+            multiplication = {{int1 * int2}}<br />
+            division = {{int1 / int2}}<br />
+            modulus = {{int1 % int2}}<br />
+
+            <button ng-click="int1=int1+1">Increment</button><br />
+        </div>
+    </div>
+</body>
+</html>

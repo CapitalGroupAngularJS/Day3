@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>AngularJS</title>
+	<meta charset="utf-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.js"></script>
+    <script>
+        angular.module("simpleApp", [])
+            .controller("SimpleController", SimpleController);
+        function SimpleController() {
+            var vm = this;
+
+            // Form Data
+            vm.user = { age: 0, name: "", spamMe: "Yes", rememberMe: true, state: "CA" };
+
+            // States
+            vm.states = [
+              { abbrev: "CA", name: "California" },
+              { abbrev: "FL", name: "Florida" },
+              { abbrev: "OR", name: "Oregon" }
+            ];
+
+            // Validation
+            vm.postData = function () {
+                vm.nameInvalid = false;
+                vm.ageInvalid = false;
+                if (vm.validationForm.$valid) console.log("Form is Valid, Post Away!");
+                else {
+                    if (vm.validationForm.userName.$invalid) vm.nameInvalid = true;
+                    if (vm.validationForm.userAge.$invalid) vm.ageInvalid = true;
+                }
+            }
+        }
+    </script>
+    <style>
+        .invalid {background: red; }
+    </style>
+</head>
+<body>
+    <h1>Module 9 - Forms</h1>
+
+    <div ng-app="simpleApp" ng-controller="SimpleController as vm">
+        Name = {{vm.user.name}}<br />
+        Age =  {{vm.user.age}}<br />
+        Spam Me = {{vm.user.spamMe}}<br />
+        Remember Me = {{vm.user.rememberMe}}<br />
+        State = {{vm.user.state}}<br />
+
+        <br />
+        Name <input type="text" ng-model="vm.user.name" ng-trim="true" />
+        Age <input type="number" ng-model="vm.user.age" /><br />
+
+        <input type="radio" ng-model="vm.user.spamMe" value="Yes" /> Yes
+        <input type="radio" ng-model="vm.user.spamMe" value="No" /> No<br />
+
+        <input type="checkbox" ng-model="vm.user.rememberMe" /> Remember Me<br />
+        <input type="checkbox" ng-model="vm.user.spamMe" ng-true-value="'Yes'" ng-false-value="'No'"/> Spam Me<br />
+
+        <select ng-model="vm.user.state">
+            <option value="CA">California</option>
+            <option value="FL">Florida</option>
+            <option value="OR">Oregon</option>
+        </select>
+
+        <br />
+        <select ng-model="vm.user.state">
+            <option ng-repeat="state in vm.states" value="{{state.abbrev}}">{{state.name}}</option>
+        </select>
+
+        <br />
+        <select ng-model="vm.user.state" ng-options="state.abbrev as state.name for state in vm.states">
+        </select>
+
+        <br />
+        <input type="submit" ng-disabled="vm.user.age < 21" />
+
+        <br /><br />
+        <form novalidate name="vm.validationForm">
+            Name <input type="text" ng-model="vm.user.name" name="userName" required ng-class="{invalid: vm.nameInvalid}"/>
+            <span ng-if="vm.nameInvalid">Invalid Name</span><br />
+            Age <input type="number" ng-model="vm.user.age" name="userAge" min="21" ng-class="{invalid: vm.ageInvalid}"/>
+            <span ng-if="vm.ageInvalid">Invalid Age</span><br />
+        </form>
+        <button ng-click="vm.postData()">Post</button>
+        <button ng-disabled="vm.validationForm.$invalid">Post</button>
+    </div>
+</body>
+</html>

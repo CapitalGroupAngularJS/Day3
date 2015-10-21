@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <title>AngularJS</title>
+	<meta charset="utf-8" />
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.js"></script>
+  <script>
+      angular
+        .module("simpleApp", [])
+        .controller("SimpleController", SimpleController);
+
+      function SimpleController() {
+        var vm = this;
+
+        // One Time Binding
+        vm.test = 1;
+
+        // ng-show ng-hide ng-if
+        vm.isVisible = true;
+        vm.toggleVisibility = function () { vm.isVisible = !vm.isVisible; }
+
+        // ng-class
+        vm.classList = "bold red";
+        vm.classArray = ["bold", "red"];
+        vm.isBold = true;
+        vm.isRed = true;
+
+        // ng-src ng-href
+        vm.imageName = "https://angularjs.org/img/AngularJS-large.png";
+        vm.angularURL = "https://angularjs.org/";
+
+        // ng-repeat
+        vm.colors = ["Red", "Green", "Blue"];
+        vm.newColor = "";
+        vm.addColor = function () { vm.colors.push(vm.newColor); }
+        vm.deleteColor = function (index) { vm.colors.splice(index, 1); }
+
+        // ng-switch
+        vm.page = 1;
+      }
+  </script>
+  <style>
+      .red { color: red; }
+      .bold { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Module 6.1 - Directives</h1>
+
+  <div ng-app="simpleApp" ng-controller="SimpleController as vm" ng-cloak>
+      {{::vm.test}}
+      <button ng-click="vm.test = vm.test + 1">Increment</button><br />
+
+      <br />
+      <button ng-click="vm.toggleVisibility()">Toggle Visibility</button>
+      <div ng-show="vm.isVisible">ng-show</div>
+      <div ng-hide="vm.isVisible">ng-hide</div>
+      <div ng-if="vm.isVisible">ng-if</div>
+
+      <br />
+      <div class="{{vm.classList}}">class with binding and space-delimited class names</div>
+      <div ng-class="vm.classList">ng-class with space-delimited class names</div>
+      <div ng-class="vm.classArray">ng-class with class array</div>
+      <div ng-class="{bold: vm.isBold, red: vm.isRed}">ng-class with JS Object</div>
+
+      <br />
+      <a ng-href="{{vm.angularURL}}">
+          <img ng-src="{{vm.imageName}}" />
+      </a>
+
+      <br />
+      <input type="text" ng-model="vm.newColor" />
+      <button ng-click="vm.addColor()">Add Color</button>
+      <ul>
+          <li ng-repeat="color in vm.colors">
+              {{::color}}
+              <button ng-click="vm.deleteColor($index)">Delete Color</button>
+          </li>
+      </ul>
+
+      <br />
+      <div ng-switch on="vm.page">
+          <div ng-switch-when="1">Page 1</div>
+          <div ng-switch-when="2">Page 2</div>
+          <div ng-switch-when="3">Page 3</div>
+      </div>
+      <button ng-click="vm.page = vm.page % 3 + 1">Next Page</button>
+  </div>
+</body>
+</html>

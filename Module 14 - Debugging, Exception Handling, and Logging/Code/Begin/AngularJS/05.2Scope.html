@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AngularJS</title>
+	<meta charset="utf-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.js"></script>
+    <script>
+        angular
+          .module("simpleApp", [])
+          .value("message", "Hello")
+		      .controller("ParentScopeController", function (message) {
+            var vm = this;
+            vm.message = message + " World.";
+		      })
+          .controller("ChildScopeController", function () {
+            var vm = this;
+            vm.message = "How are you?";
+          })
+          .controller("ParentModifyScopeController", ParentModifyScopeController)
+          .controller("ChildModifyScopeController", ChildModifyScopeController);
+
+          function ParentModifyScopeController() {
+            var vm = this;
+            vm.productName = "Widget1";
+            vm.product = { name: "Widget2" };
+          }
+
+          function ChildModifyScopeController()  {
+            var vm = this;
+            vm.productName = "DoHickey3";
+            vm.product.name = "DoHickey4";
+          }
+          ChildModifyScopeController.prototype = new ParentModifyScopeController();
+    </script>
+</head>
+<body>
+    <h1>Module 05.2 Scope</h1>
+    <div ng-app="simpleApp">
+        <div ng-controller="ParentScopeController as psc">{{psc.message}}</div>
+        <div ng-controller="ParentScopeController as psc">
+            {{psc.message}}
+            <div ng-controller="ChildScopeController as csc">
+              {{psc.message + " " + csc.message}}
+            </div>
+        </div>
+        <div ng-controller="ChildScopeController as csc">{{csc.message}}</div>
+
+        <br />
+        <div ng-controller="ParentModifyScopeController as pmsc">
+            productName = {{pmsc.productName}}<br />
+            product.name = {{pmsc.product.name}}<br />
+
+            <div ng-controller="ChildModifyScopeController as cmsc">
+                productName = {{cmsc.productName}}<br />
+                product.name = {{cmsc.product.name}}<br />
+            </div>
+        </div>
+    </div>
+</body>
+</html>
